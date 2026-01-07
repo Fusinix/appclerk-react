@@ -2,9 +2,21 @@
   <img src="https://appclerk.dev/images/logo-main.png" alt="AppClerk Core Banner" width="300" />
 </p>
 
+<!-- @format -->
+
 # appclerk-react
 
-React SDK for AppClerk - React/Next.js components and hooks for compliance infrastructure.
+React SDK for AppClerk - React components and hooks for Next.js, Vite, and other React frameworks.
+
+## Compatibility
+
+✅ **Next.js** (App Router & Pages Router)  
+✅ **Vite** (React + TypeScript)  
+✅ **Create React App**  
+✅ **Remix**  
+✅ **Any React 18+ framework**
+
+All components use `"use client"` directives for Next.js App Router compatibility and work seamlessly with Vite and other React frameworks.
 
 ## Installation
 
@@ -20,20 +32,59 @@ pnpm add appclerk-core appclerk-react
 
 ### Setup Provider
 
+#### Next.js (App Router)
+
 ```tsx
-// app/layout.tsx (Next.js)
-import { AppClerkProvider } from 'appclerk-react';
+// app/layout.tsx
+import { AppClerkProvider } from "appclerk-react";
 
 export default function RootLayout({ children }) {
-  return (
-    <AppClerkProvider
-      apiKey={process.env.APPCLERK_API_KEY}
-      projectId={process.env.APPCLERK_PROJECT_ID}
-    >
-      {children}
-    </AppClerkProvider>
-  );
+	return (
+		<AppClerkProvider
+			apiKey={process.env.APPCLERK_API_KEY}
+			projectId={process.env.APPCLERK_PROJECT_ID}
+		>
+			{children}
+		</AppClerkProvider>
+	);
 }
+```
+
+#### Next.js (Pages Router)
+
+```tsx
+// pages/_app.tsx
+import { AppClerkProvider } from "appclerk-react";
+
+export default function App({ Component, pageProps }) {
+	return (
+		<AppClerkProvider
+			apiKey={process.env.NEXT_PUBLIC_APPCLERK_API_KEY}
+			projectId={process.env.NEXT_PUBLIC_APPCLERK_PROJECT_ID}
+		>
+			<Component {...pageProps} />
+		</AppClerkProvider>
+	);
+}
+```
+
+#### Vite / Create React App
+
+```tsx
+// src/main.tsx or src/index.tsx
+import { AppClerkProvider } from "appclerk-react";
+import { createRoot } from "react-dom/client";
+
+const root = createRoot(document.getElementById("root")!);
+
+root.render(
+	<AppClerkProvider
+		apiKey={import.meta.env.VITE_APPCLERK_API_KEY}
+		projectId={import.meta.env.VITE_APPCLERK_PROJECT_ID}
+	>
+		<App />
+	</AppClerkProvider>
+);
 ```
 
 ### Components
@@ -41,65 +92,50 @@ export default function RootLayout({ children }) {
 #### Privacy Policy
 
 ```tsx
-'use client';
-import { PrivacyPolicy } from 'appclerk-react';
+"use client";
+import { PrivacyPolicy } from "appclerk-react";
 
 export function MyPrivacyPolicy() {
-  return (
-    <PrivacyPolicy
-      renderMode="native"
-      displayMode="inline"
-    />
-  );
+	return <PrivacyPolicy renderMode="native" displayMode="inline" />;
 }
 ```
 
 #### Terms of Service
 
 ```tsx
-'use client';
-import { TermsOfService } from 'appclerk-react';
+"use client";
+import { TermsOfService } from "appclerk-react";
 
 export function MyTerms() {
-  return (
-    <TermsOfService
-      renderMode="native"
-      displayMode="modal"
-    />
-  );
+	return <TermsOfService renderMode="native" displayMode="modal" />;
 }
 ```
 
 #### Compliance Badge
 
 ```tsx
-'use client';
-import { ComplianceBadge } from 'appclerk-react';
+"use client";
+import { ComplianceBadge } from "appclerk-react";
 
 export function MyBadge() {
-  return (
-    <ComplianceBadge
-      style="compact"
-      showLink={true}
-    />
-  );
+	return <ComplianceBadge style="compact" showLink={true} />;
 }
 ```
 
 #### Compliance Widget
 
 ```tsx
-'use client';
-import { ComplianceWidget } from 'appclerk-react';
+"use client";
+import { ComplianceWidget } from "appclerk-react";
 
 export function MyWidget() {
-  return (
-    <ComplianceWidget
-      position="bottom-right"
-      showBadge={true}
-      showLinks={true}
-    />
-  );
+	return (
+		<ComplianceWidget
+			position="bottom-right"
+			showBadge={true}
+			showLinks={true}
+		/>
+	);
 }
 ```
 
@@ -108,33 +144,33 @@ export function MyWidget() {
 #### useDocumentContent
 
 ```tsx
-import { useDocumentContent } from 'appclerk-react';
+import { useDocumentContent } from "appclerk-react";
 
 function MyComponent() {
-  const { data, loading, error, refetch } = useDocumentContent({
-    documentType: 'privacy-policy',
-  });
+	const { data, loading, error, refetch } = useDocumentContent({
+		documentType: "privacy-policy",
+	});
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+	if (loading) return <div>Loading...</div>;
+	if (error) return <div>Error: {error.message}</div>;
 
-  return <div>{data?.content}</div>;
+	return <div>{data?.content}</div>;
 }
 ```
 
 #### useComplianceStatus
 
 ```tsx
-import { useComplianceStatus } from 'appclerk-react';
+import { useComplianceStatus } from "appclerk-react";
 
 function MyComponent() {
-  const { data, loading } = useComplianceStatus({
-    refreshInterval: 60000, // Refresh every minute
-  });
+	const { data, loading } = useComplianceStatus({
+		refreshInterval: 60000, // Refresh every minute
+	});
 
-  if (loading) return <div>Loading...</div>;
+	if (loading) return <div>Loading...</div>;
 
-  return <div>Score: {data?.score}%</div>;
+	return <div>Score: {data?.score}%</div>;
 }
 ```
 
