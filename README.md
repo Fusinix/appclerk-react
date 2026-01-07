@@ -242,5 +242,8 @@ Loads hosted HTML in an iframe:
 
 MIT
 
-Official documentation: https://appclerk.dev/docs/sdk/react-native
+Official documentation: https://appclerk.dev/docs/sdk/react
+
 Appclerk Core: https://appclerk.dev/docs/sdk/core
+
+Appclerk React Native/Expo: https://appclerk.dev/docs/sdk/react-native
