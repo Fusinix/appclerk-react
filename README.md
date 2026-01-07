@@ -1,22 +1,12 @@
+<!-- @format -->
+
 <p align="center">
   <img src="https://appclerk.dev/images/logo-main.png" alt="AppClerk Core Banner" width="300" />
 </p>
 
-<!-- @format -->
-
 # appclerk-react
 
-React SDK for AppClerk - React components and hooks for Next.js, Vite, and other React frameworks.
-
-## Compatibility
-
-✅ **Next.js** (App Router & Pages Router)  
-✅ **Vite** (React + TypeScript)  
-✅ **Create React App**  
-✅ **Remix**  
-✅ **Any React 18+ framework**
-
-All components use `"use client"` directives for Next.js App Router compatibility and work seamlessly with Vite and other React frameworks.
+React SDK for AppClerk - React/Next.js components and hooks for compliance infrastructure.
 
 ## Installation
 
@@ -34,18 +24,51 @@ pnpm add appclerk-core appclerk-react
 
 #### Next.js (App Router)
 
+Because `app/layout.tsx` is a Server Component, you should create a small **client wrapper** for the provider and use that from your layout:
+
 ```tsx
-// app/layout.tsx
+// app/appclerk-provider.tsx
+"use client";
+
 import { AppClerkProvider } from "appclerk-react";
 
-export default function RootLayout({ children }) {
+export function AppClerkRootProvider({
+	children,
+}: {
+	children: React.ReactNode;
+}) {
 	return (
 		<AppClerkProvider
-			apiKey={process.env.APPCLERK_API_KEY}
-			projectId={process.env.APPCLERK_PROJECT_ID}
+			apiKey={process.env.NEXT_PUBLIC_APPCLERK_API_KEY!}
+			projectId={process.env.NEXT_PUBLIC_APPCLERK_PROJECT_ID!}
 		>
 			{children}
 		</AppClerkProvider>
+	);
+}
+```
+
+```tsx
+// app/layout.tsx
+import type { Metadata } from "next";
+import "./globals.css";
+import { AppClerkRootProvider } from "./appclerk-provider";
+
+export const metadata: Metadata = {
+	/* ... */
+};
+
+export default function RootLayout({
+	children,
+}: {
+	children: React.ReactNode;
+}) {
+	return (
+		<html lang="en">
+			<body>
+				<AppClerkRootProvider>{children}</AppClerkRootProvider>
+			</body>
+		</html>
 	);
 }
 ```
@@ -74,6 +97,7 @@ export default function App({ Component, pageProps }) {
 // src/main.tsx or src/index.tsx
 import { AppClerkProvider } from "appclerk-react";
 import { createRoot } from "react-dom/client";
+import App from "./App";
 
 const root = createRoot(document.getElementById("root")!);
 
